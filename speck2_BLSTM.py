@@ -222,7 +222,7 @@ if __name__ == "__main__":
         "dataset_name": "speck2_1_2e6",
         "log_path": os.path.abspath("statics/save/"),
         "save_path": os.path.abspath(f"statics/save/{model}_pth"),
-        "max_epoch": 150,
+        "max_epoch": 300,
         "save_epoch": 10,
         "is_save" : False,
         "batch_size": 64*64,
