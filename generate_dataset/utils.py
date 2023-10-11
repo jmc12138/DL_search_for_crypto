@@ -12,6 +12,17 @@ def list2bin(_list):
     _str = ''.join(_list)
     _bin = int(_str, 2).to_bytes(8,'little')
     return _bin
+def list2bin16(_list):
+    _list = [str(item) for item in _list]
+    _str = ''.join(_list)
+    _bin = int(_str, 2).to_bytes(16,'little')
+    return _bin
+
+def list2bin64(_list):
+    _list = [str(item) for item in _list]
+    _str = ''.join(_list)
+    _bin = int(_str, 2).to_bytes(8,'little')
+    return _bin
 def gen_random_key():
     rand_list56 = [random.randint(0, 1) for i in range(56)]
     rand_list64 = [0] * 64
