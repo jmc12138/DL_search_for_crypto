@@ -90,6 +90,16 @@ class speck1(speck):
     def __init__(self):
         file_path = os.path.abspath(r'statics/datasets/speck/speck2_1_2e5.pkl')
         super().__init__(file_path)
+
+
+
+@register('speck2_1_2e4')
+class speck1(speck):
+
+    def __init__(self):
+        file_path = os.path.abspath(r'statics/datasets/speck/speck2_1_2e4.pkl')
+        super().__init__(file_path)
+
 if __name__ == '__main__':
     a = make('speck1_1_2e4_10')
 

@@ -24,11 +24,13 @@ import utils
 from sklearn.metrics import confusion_matrix
 import shutil
 
+
 def main():
 
 
     max_va = 0
     now_epoch = 1
+
     summary_path = rf"statics/Summarys/{opt.model}_{opt.dataset_name}_Summary"
     if  os.path.exists(summary_path):
         shutil.rmtree(summary_path)
@@ -42,7 +44,7 @@ def main():
     if opt._parallel:
         model = nn.DataParallel(model)
 
-    utils.log("num params: {}".format(utils.compute_n_params(model)))
+    # utils.log("num params: {}".format(utils.compute_n_params(model)))
 
 
     criterion = torch.nn.CrossEntropyLoss(
@@ -75,7 +77,7 @@ def main():
         model.train()
 
         for data, label in tqdm(train_loader, desc="train", leave=False):
-            data, label = data.to(opt.device), label.to(opt.device)
+            data, label = data.reshape(opt.batch_size,1,32,1).to(opt.device), label.to(opt.device)
 
             optimizer.zero_grad()
             logits = model(data)
@@ -98,7 +100,7 @@ def main():
 
         model.eval()
         for data, label in tqdm(test_loader, desc="test", leave=False):
-            data, label = data.to(opt.device), label.to(opt.device)
+            data, label = data.transpose(0,1).to(opt.device), label.to(opt.device)
             with torch.no_grad():
                 logits = model(data)
 
@@ -124,7 +126,7 @@ def main():
             epoch_str = "ex"
 
         # 在tensorboard中画图
-        _ = ["loss", "acc", "precision", "recall", "f1_score", "tpr", "tnr","tn","tp","fn","fp"]
+        _ = ["loss", "acc", "precision", "recall", "f1_score", "tpr", "tnr"]
         train_total_score.cal()
         test_total_score.cal()
         utils.writer_scalars(
@@ -167,10 +169,8 @@ def main():
         )
         writer.add_scalar("lr", optimizer.param_groups[0]["lr"], epoch)
 
-
         for name, param in model.named_parameters():
-                if hasattr(param.grad, 'data'):
-                    writer.add_histogram( name + 'gradient/', param.grad.clone().cpu().data.numpy(),epoch)
+                writer.add_histogram( name + 'gradient/', param.grad.clone().cpu().data.numpy(),epoch)
                 writer.add_histogram( name, param.clone().cpu().data.numpy(),epoch)
 
         log_str = "epoch {}, train {:.4f}|{:.4f}|{:.4f}".format(
@@ -179,7 +179,6 @@ def main():
             train_total_score.accuracy,
             test_total_score.accuracy,
         )
-
 
         utils.log(
             log_str + " , " f"t_epoch:{t_epoch},t_used:{t_used},t_estimate:{t_estimate}"
@@ -226,19 +225,19 @@ def main():
 
 
 if __name__ == "__main__":
-    model = "BLSTM_speck2"
+    model = "ResNet50_speck2"
     args = {
-        "dataset_name": "speck2_1_2e6",
+        "dataset_name": "speck2_1_2e5",
         "log_path": os.path.abspath("statics/save/"),
         "save_path": os.path.abspath(f"statics/save/{model}_pth"),
-        "max_epoch": 300,
+        "max_epoch": 150,
         "save_epoch": 10,
         "is_save" : False,
-        "batch_size": 64*64,
+        "batch_size": 64*2,
         "load_path": os.path.abspath(f"statics/save/{model}_pth/epoch-last.pth"),
         "is_load": False,
         "model": model,
-        "optimizer": "AdaMod",
+        "optimizer": "Adamax",
         "lr": 0.01,
         "lr_scheduler": "None",
         "num_workers": 0,
@@ -246,15 +245,12 @@ if __name__ == "__main__":
         "device": utils.set_device(),
         "_parallel": False,
         "dropout": 0.5,
-        "hidden_size": 1000,
-        "num_layers": 2
     }
 
     RECEIVED_PARAMS = {
-    "lr": 1e-4,
-    # "hidden_size": 868,
+    "lr": 0.0012368514346040292,
     "optimizer": "AdaMod",
-    # "num_layers": 2
+    "num_layers": 2
 }
     
 
@@ -263,10 +259,11 @@ if __name__ == "__main__":
         "device": "cuda",
         "_parallel": False,
     }
-# 6E32D0943418C2C33385BC35A1470250DD8923A9
+
     args.update(RECEIVED_PARAMS)
     args.update(GPU_PARAMS)
-    args["model_args"] = dict(dropout=args["dropout"], hidden_size=args["hidden_size"],num_layers=args['num_layers'])
+    # args["model_args"] = dict(dropout=args["dropout"])
+    args["model_args"] = dict()
     args["optimizer_args"] = dict(lr=args["lr"], weight_decay=None, milestones=[30, 80])
 
     opt = argparse.Namespace(**args)

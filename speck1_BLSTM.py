@@ -22,6 +22,7 @@ import datasets
 import models
 import utils
 from sklearn.metrics import confusion_matrix
+import shutil
 
 
 def main():
@@ -30,7 +31,10 @@ def main():
     max_va = 0
     now_epoch = 1
 
-    writer = SummaryWriter(rf"statics/Summarys/{opt.model}_Summary")
+    summary_path = rf"statics/Summarys/{opt.model}_{opt.dataset_name}_Summary"
+    if  os.path.exists(summary_path):
+        shutil.rmtree(summary_path)
+    writer = SummaryWriter(summary_path)
     train_loader,test_loader,weight = utils.get_dataLoader_weight(opt)
     model = models.make(opt.model, **opt.model_args)
     # model = models.make(opt.model)
@@ -164,6 +168,10 @@ def main():
             epoch,
         )
         writer.add_scalar("lr", optimizer.param_groups[0]["lr"], epoch)
+
+        for name, param in model.named_parameters():
+                writer.add_histogram( name + 'gradient/', param.grad.clone().cpu().data.numpy(),epoch)
+                writer.add_histogram( name, param.clone().cpu().data.numpy(),epoch)
 
         log_str = "epoch {}, train {:.4f}|{:.4f}|{:.4f}".format(
             epoch_str,
