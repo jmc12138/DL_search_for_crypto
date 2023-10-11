@@ -24,6 +24,10 @@ def gen_random_key():
             idx56 += 1 
     return rand_list56,rand_list64
 
+def gen_random_key2():
+    rand_list64 = [random.randint(0, 1) for i in range(64)]
+    
+    return rand_list64
 
 def get_random_data():
     rand_list = [random.randint(0, 1) for i in range(64)]

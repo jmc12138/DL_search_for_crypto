@@ -122,7 +122,7 @@ def main():
             epoch_str = "ex"
 
         # 在tensorboard中画图
-        _ = ["loss", "acc", "precision", "recall", "f1_score", "tpr", "tnr"]
+        _ = ["loss", "acc", "precision", "recall", "f1_score", "tpr", "tnr","tn","tp","fn","fp"]
         train_total_score.cal()
         test_total_score.cal()
         utils.writer_scalars(
@@ -217,19 +217,19 @@ def main():
 
 
 if __name__ == "__main__":
-    model = "BLSTM_DES1"
+    model = "BLSTM_speck2"
     args = {
-        "dataset_name": "DES1G",
+        "dataset_name": "speck2_1_2e6",
         "log_path": os.path.abspath("statics/save/"),
         "save_path": os.path.abspath(f"statics/save/{model}_pth"),
         "max_epoch": 150,
         "save_epoch": 10,
         "is_save" : False,
-        "batch_size": 64*2,
+        "batch_size": 64*64,
         "load_path": os.path.abspath(f"statics/save/{model}_pth/epoch-last.pth"),
         "is_load": False,
         "model": model,
-        "optimizer": "Adamax",
+        "optimizer": "AdaMod",
         "lr": 0.01,
         "lr_scheduler": "None",
         "num_workers": 0,
@@ -238,14 +238,14 @@ if __name__ == "__main__":
         "_parallel": False,
         "dropout": 0.5,
         "hidden_size": 1000,
-        "num_layers": 1
+        "num_layers": 2
     }
 
     RECEIVED_PARAMS = {
-    "lr": 0.0012368514346040292,
-    "hidden_size": 868,
-    "optimizer": "AdaMod",
-    "num_layers": 2
+    # "lr": 0.0012368514346040292,
+    # "hidden_size": 868,
+    # "optimizer": "AdaMod",
+    # "num_layers": 2
 }
     
 
@@ -254,7 +254,7 @@ if __name__ == "__main__":
         "device": "cuda",
         "_parallel": False,
     }
-
+# 6E32D0943418C2C33385BC35A1470250DD8923A9
     args.update(RECEIVED_PARAMS)
     args.update(GPU_PARAMS)
     args["model_args"] = dict(dropout=args["dropout"], hidden_size=args["hidden_size"],num_layers=args['num_layers'])

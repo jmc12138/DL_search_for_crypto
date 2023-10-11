@@ -120,7 +120,7 @@ class F1Meter(object):
 
         self.tpr = tp / (tp + fp)
         self.tnr = tn / (tn + fn)
-
+        self.tn, self.fp, self.fn, self.tp = tn, fp, fn, tp
 
 
 

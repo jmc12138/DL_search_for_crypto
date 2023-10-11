@@ -130,10 +130,15 @@ def main():
             [
                 train_summary_loss.avg,
                 train_total_score.accuracy,
+                train_total_score.precision,
                 train_total_score.recall,
                 train_total_score.f1,
                 train_total_score.tpr,
                 train_total_score.tnr,
+                train_total_score.tn, 
+                train_total_score.fp, 
+                train_total_score.fn, 
+                train_total_score.tp
             ],
             "train",
             writer,
@@ -142,12 +147,17 @@ def main():
         utils.writer_scalars(
             _,
             [
-                test_summary_loss.avg,
+               test_summary_loss.avg,
                 test_total_score.accuracy,
+                test_total_score.precision,
                 test_total_score.recall,
                 test_total_score.f1,
                 test_total_score.tpr,
                 test_total_score.tnr,
+                test_total_score.tn, 
+                test_total_score.fp, 
+                test_total_score.fn, 
+                test_total_score.tp
             ],
             "test",
             writer,

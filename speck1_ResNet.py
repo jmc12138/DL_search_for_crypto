@@ -217,9 +217,9 @@ def main():
 
 
 if __name__ == "__main__":
-    model = "BLSTM_DES1"
+    model = "BLSTM_speck1"
     args = {
-        "dataset_name": "DES1G",
+        "dataset_name": "speck1_1_2e5_10",
         "log_path": os.path.abspath("statics/save/"),
         "save_path": os.path.abspath(f"statics/save/{model}_pth"),
         "max_epoch": 150,

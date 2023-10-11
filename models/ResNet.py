@@ -134,6 +134,7 @@ def ResNet18(num_classes):
 def ResNet34(num_classes):
     return ResNet(BasicBlock, [3,4,6,3],num_classes)
 
+@register('ResNet50')
 def ResNet50(num_classes):
     return ResNet(Bottleneck, [3,4,6,3],num_classes)
 

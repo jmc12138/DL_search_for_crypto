@@ -217,9 +217,9 @@ def main():
 
 
 if __name__ == "__main__":
-    model = "BLSTM_DES1"
+    model = "MLP_speck1"
     args = {
-        "dataset_name": "DES1G",
+        "dataset_name": "speck1_1_2e5_10",
         "log_path": os.path.abspath("statics/save/"),
         "save_path": os.path.abspath(f"statics/save/{model}_pth"),
         "max_epoch": 150,
@@ -237,15 +237,11 @@ if __name__ == "__main__":
         "device": utils.set_device(),
         "_parallel": False,
         "dropout": 0.5,
-        "hidden_size": 1000,
-        "num_layers": 1
     }
 
     RECEIVED_PARAMS = {
     "lr": 0.0012368514346040292,
-    "hidden_size": 868,
     "optimizer": "AdaMod",
-    "num_layers": 2
 }
     
 
@@ -257,7 +253,7 @@ if __name__ == "__main__":
 
     args.update(RECEIVED_PARAMS)
     args.update(GPU_PARAMS)
-    args["model_args"] = dict(dropout=args["dropout"], hidden_size=args["hidden_size"],num_layers=args['num_layers'])
+    args["model_args"] = dict(dropout=args["dropout"])
     args["optimizer_args"] = dict(lr=args["lr"], weight_decay=None, milestones=[30, 80])
 
     opt = argparse.Namespace(**args)

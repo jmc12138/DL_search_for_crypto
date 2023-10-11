@@ -105,7 +105,14 @@ def convert_to_binary(arr):
   X = X.transpose()
   return(X)
 
-
+def convert_to_binary32(arr):
+  X = np.zeros((2 * WORD_SIZE(), len(arr[0])), dtype=np.uint8)
+  for i in range(2 * WORD_SIZE()):
+    index = i // WORD_SIZE()
+    offset = WORD_SIZE() - (i % WORD_SIZE()) - 1
+    X[i] = (arr[index] >> offset) & 1
+  X = X.transpose()
+  return(X)
 # baseline training data generator,  speck32/64
 def make_train_data(n, nr, diff=(0x0040, 0)):
   Y = np.frombuffer(urandom(n), dtype=np.uint8); Y = Y & 1
@@ -121,6 +128,11 @@ def make_train_data(n, nr, diff=(0x0040, 0)):
   ctdata1l, ctdata1r = encrypt((plain1l, plain1r), ks)
   X = convert_to_binary([ctdata0l, ctdata0r, ctdata1l, ctdata1r])
   return(X,Y)
+
+if __name__ == "__main__":
+   X,Y = make_train_data(1,1)
+   print(X)
+   print(Y)
 
 
 # check_testvector()
