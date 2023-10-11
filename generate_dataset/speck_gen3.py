@@ -38,6 +38,7 @@ def get_dataset(data_num,num_space,round):
         int_key64 = np.uint64(int.from_bytes(key,'little',signed=False))
         key64.append(int_key64)
         keys.append(key2)
+
     keys = np.array(keys,dtype=np.uint16).reshape(4,-1)
     key64 = np.array(key64,dtype=np.uint16)
     ks = speck.expand_key(keys, nr)
@@ -65,7 +66,7 @@ def get_dataset(data_num,num_space,round):
 # main 
 if __name__ == '__main__':
 
-    data_num = 2e3
+    data_num = 2e6
     num_space = 2
     round = 1
     get_dataset(data_num,num_space,round)
